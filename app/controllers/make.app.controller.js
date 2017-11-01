@@ -10,31 +10,43 @@ exports.saveAppInfo = (req, rep) => {
     // if (!editorRaw || !title ) {
     //     return rep(Boom.notFound('Connot find raw data of editor.'))
     // }
-
-    const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
-    const stdoutArr = stdout.split('\n')
-    console.log(stderr)
-    const appMaker = new AppMaker({
-        uni_name,
-        uni_abb,
-        uni_th_name,
-        uni_th_abb,
-        color,
-        logo,
-        createdBy,
-        features: {
-            career,
-            donate,
-            event,
-            news
-        },
-        android_download: stdoutArr[stdoutArr.length-2]
+    var pyshell = new PythonShell('swarm-script.py', { scriptPath: `${__dirname}/../../swarm-script/`} )
+    pyshell.send(uni_abb)
+    
+    pyshell.on('message', function (message) {
+        console.log(message)
     })
 
-    appMaker.save(function(err) {
-        if (err) { return rep(Boom.notFound(err)) }
-        return rep({appMaker})
+    pyshell.end(function (err) {
+        if (err){
+            throw err
+        }
+        console.log('finished')
     })
+    // const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
+    // const stdoutArr = stdout.split('\n')
+    // console.log(stderr)
+    // const appMaker = new AppMaker({
+    //     uni_name,
+    //     uni_abb,
+    //     uni_th_name,
+    //     uni_th_abb,
+    //     color,
+    //     logo,
+    //     createdBy,
+    //     features: {
+    //         career,
+    //         donate,
+    //         event,
+    //         news
+    //     },
+    //     android_download: stdoutArr[stdoutArr.length-2]
+    // })
+
+    // appMaker.save(function(err) {
+    //     if (err) { return rep(Boom.notFound(err)) }
+    //     return rep({appMaker})
+    // })
 }
 
 exports.searchAppByUserId = (req, rep) => {
@@ -114,6 +126,4 @@ exports.testPython = (req, rep) => {
     
         console.log('finished');
     })
-
-    //pyshell.send(JSON.stringify([1,2,3,4,5]))
 }
