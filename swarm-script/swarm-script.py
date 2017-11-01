@@ -34,7 +34,7 @@ class alumniSwarm:
         self.swarmLogger.logs(" - Removed "+institute+" stack.")
 
     def cp_file_container(self,institute):
-        time.sleep(120)
+        time.sleep(10)
         command = ["docker","cp","/var/www/manage_API/swarm-script/.env",institute+"_web_1:/src/app/.env"]
         self.run_command(command)
         command = ["docker","restart",institute+"_web_1"]
@@ -123,7 +123,7 @@ class alumniSwarm:
 
 
 alumniSwarm().deploy_infra(in_js[0].rstrip())
-alumniSwarm().destroy_infra(in_js[0].rstrip())
+#alumniSwarm().destroy_infra(in_js[0].rstrip())
 
 
 
