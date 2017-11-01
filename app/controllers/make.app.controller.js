@@ -10,43 +10,48 @@ exports.saveAppInfo = (req, rep) => {
     // if (!editorRaw || !title ) {
     //     return rep(Boom.notFound('Connot find raw data of editor.'))
     // }
-    var pyshell = new PythonShell('swarm-script.py', { scriptPath: `${__dirname}/../../swarm-script/`} )
-    pyshell.send(uni_abb)
-    
-    pyshell.on('message', function (message) {
-        console.log(message)
-    })
 
-    pyshell.end(function (err) {
-        if (err){
-            throw err
+    const appMaker = new AppMaker({
+        uni_name,
+        uni_abb,
+        uni_th_name,
+        uni_th_abb,
+        color,
+        logo,
+        createdBy,
+        features: {
+            career,
+            donate,
+            event,
+            news
         }
-        console.log('finished')
     })
-    // const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
-    // const stdoutArr = stdout.split('\n')
-    // console.log(stderr)
-    // const appMaker = new AppMaker({
-    //     uni_name,
-    //     uni_abb,
-    //     uni_th_name,
-    //     uni_th_abb,
-    //     color,
-    //     logo,
-    //     createdBy,
-    //     features: {
-    //         career,
-    //         donate,
-    //         event,
-    //         news
-    //     },
-    //     android_download: stdoutArr[stdoutArr.length-2]
-    // })
 
-    // appMaker.save(function(err) {
-    //     if (err) { return rep(Boom.notFound(err)) }
-    //     return rep({appMaker})
-    // })
+    appMaker.save(function(err) {
+        if (err) { return rep(Boom.notFound(err)) }
+
+        var pyshell = new PythonShell('swarm-script.py', { scriptPath: `${__dirname}/../../swarm-script/`} )
+        pyshell.send(uni_abb).send(appMaker._id)
+        
+        pyshell.on('message', function (message) {
+            console.log(message)
+        })
+    
+        pyshell.end(function (err) {
+            if (err){
+                throw err
+            }
+            console.log('finished')
+        })
+
+        // const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
+        // const stdoutArr = stdout.split('\n')
+
+        // AppMaker.findByIdAndUpdate(appMaker._id, {android_download: stdoutArr[stdoutArr.length-2]}, {new: true}, (err, user) => {
+        //     return rep({appMaker})
+        // })
+    })
+
 }
 
 exports.searchAppByUserId = (req, rep) => {

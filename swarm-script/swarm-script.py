@@ -8,7 +8,7 @@ from subprocess import Popen,PIPE
 from datetime import datetime 
 
 in_js = sys.stdin.readlines()
-print(in_js[0])
+
 class SwarmLogger:
     def logs(self,message):
         datenow = datetime.today().strftime('%d-%m-%Y %H:%M:%S')
