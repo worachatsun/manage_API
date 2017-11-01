@@ -115,6 +115,16 @@ class alumniSwarm:
         self.cp_file_container(institute)
         #self.replace_container(ins)
                     
+    def change_app_id(self,app_id):
+        with open('/var/www/Senior_Project/.env','r') as env:
+            s = env.read()
+        with open('/var/www/Senior_Project/.env','w') as env:
+            r = s.replace('app_id',str(app_id))
+            env.write(r)
+        
+
+
+
     def deploy_infra(self,institute):
         self.last_line(institute)
 
@@ -123,6 +133,8 @@ class alumniSwarm:
 
 
 alumniSwarm().deploy_infra(in_js[0].rstrip())
+alumniSwarm().change_app_id(in_js[1].rstrip())
+
 #alumniSwarm().destroy_infra(in_js[0].rstrip())
 
 
