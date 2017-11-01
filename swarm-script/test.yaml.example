@@ -1,0 +1,26 @@
+version: "3"
+  
+services:
+  
+  db:
+    image: mongo
+    deploy:
+      replicas: 1
+    ports:
+      - "db-port:27017"
+  
+  api:
+    image: boszerwp/alc-api:11
+    links:
+      - db:db
+    ports: 
+      - "api-port:3000"
+  
+  web:
+    image: boszerwp/alc-cms:11
+    ports:
+      - "web-port:8080"
+    links:
+      - api:api
+ 
+    
