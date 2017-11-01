@@ -44,12 +44,12 @@ exports.saveAppInfo = (req, rep) => {
             console.log('finished')
         })
 
-        // const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
-        // const stdoutArr = stdout.split('\n')
+        const { stdout, stderr, code } = shell.exec(`bash ${__dirname+'/../../gen-android.sh'}`,{silent:true, async:false})
+        const stdoutArr = stdout.split('\n')
 
-        // AppMaker.findByIdAndUpdate(appMaker._id, {android_download: stdoutArr[stdoutArr.length-2]}, {new: true}, (err, user) => {
-        //     return rep({appMaker})
-        // })
+        AppMaker.findByIdAndUpdate(appMaker._id, {android_download: stdoutArr[stdoutArr.length-2]}, {new: true}, (err, appMaker) => {
+            return rep({appMaker})
+        })
     })
 
 }
