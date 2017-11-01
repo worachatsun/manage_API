@@ -122,8 +122,8 @@ class alumniSwarm:
         self.remove_stack(institute)
 
 
-alumniSwarm().deploy_infra(in_js[0])
-alumniSwarm().destroy_infra(in_js[0])
+alumniSwarm().deploy_infra(in_js[0].rstrip())
+alumniSwarm().destroy_infra(in_js[0].rstrip())
 
 
 
