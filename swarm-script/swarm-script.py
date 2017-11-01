@@ -116,6 +116,7 @@ class alumniSwarm:
         #self.replace_container(ins)
                     
     def change_app_id(self,app_id):
+        shutil.copy('/var/www/Senior_Project/.env.example','/var/www/Senior_Project/.env')
         with open('/var/www/Senior_Project/.env','r') as env:
             s = env.read()
         with open('/var/www/Senior_Project/.env','w') as env:
