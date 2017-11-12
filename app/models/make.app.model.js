@@ -15,6 +15,7 @@ let AppMakerSchema = new Schema({
         news: {type: Boolean, required: true}
     },
     android_download: String,
+    web_api: String,
     createdBy: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
