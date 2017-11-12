@@ -96,6 +96,20 @@ exports.updateAppData = (req, rep) => {
 }
 
 exports.deleteApp = (req, rep) => {
+    var pyshell = new PythonShell('destroy_stack.py', { scriptPath: `${__dirname}/../../swarm-script/`} )
+    pyshell.send(req.payload._id)
+    
+    pyshell.on('message', function (message) {
+        console.log(message)
+    })
+
+    pyshell.end(function (err) {
+        if (err){
+            throw err
+        }
+        console.log('finished')
+    })
+
     AppMaker.remove({ _id: req.payload._id }, function (err) {
         if (err) return handleError(err)
         return rep({status: 'removed'})
