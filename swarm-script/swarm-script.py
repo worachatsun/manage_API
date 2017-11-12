@@ -35,7 +35,7 @@ class alumniSwarm:
 
     def cp_file_container(self,institute):
         time.sleep(10)
-        command = ["docker","cp","/var/www/manage_API/swarm-script/.env",institute+"_web_1:/src/app/.env"]
+        command = ["docker","cp","/var/www/manage_API/swarm-script/.env ",institute+"_web_1:/src/app/.env"]
         self.run_command(command)
         command = ["docker","restart",institute+"_web_1"]
         self.run_command(command)
@@ -95,7 +95,6 @@ class alumniSwarm:
                 res = ','.join(row)
                 if(res != ''):
                     break
-        print(app_id)
         self.insert_deployed_stack_info(ins,res,app_id)
                     
     def replace_container(self,institute):
