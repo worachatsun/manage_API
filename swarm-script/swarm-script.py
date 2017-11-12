@@ -63,7 +63,9 @@ class alumniSwarm:
             writer.writerow({'id': ids,'name': institute,'api-port':api,'web-port':web,'db-port' : db})
             info.close()
         ec = self.env_change(ins,api,web,db)
-        self.change_app_id(api,app_id)   
+        print(app_id)
+        self.change_app_id(api,app_id)
+
 
 
     
@@ -92,6 +94,7 @@ class alumniSwarm:
                 res = ','.join(row)
                 if(res != ''):
                     break
+        print(app_id)
         self.insert_deployed_stack_info(ins,res,app_id)
                     
     def replace_container(self,institute):
@@ -118,13 +121,14 @@ class alumniSwarm:
         #self.replace_container(ins)
                     
     def change_app_id(self,app_api,app_id):
+        print(app_id)
         shutil.copy('/var/www/Senior_Project/env.js.example','/var/www/Senior_Project/env.js')
         with open('/var/www/Senior_Project/env.js','r') as env:
             s = env.read()
         with open('/var/www/Senior_Project/env.js','w') as env:
-            r = s.replace('app_id',str(app_id))
-            r = s.replace('app_api',str(app_api))
-            env.write(r)
+            s = s.replace('app_id',str(app_id))
+            s = s.replace('app_api',str(app_api))
+            env.write(s)
         
 
 
