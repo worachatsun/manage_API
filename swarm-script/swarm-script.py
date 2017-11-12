@@ -63,7 +63,8 @@ class alumniSwarm:
             writer.writerow({'id': ids,'name': institute,'api-port':api,'web-port':web,'db-port' : db})
             info.close()
         ec = self.env_change(ins,api,web,db)
-        print(app_id)
+        print('13.229.93.168:'+web)
+        #print(app_id)
         self.change_app_id(api,app_id)
 
 

@@ -16,6 +16,7 @@ class SwarmLogger:
             logf.write(datenow+' || '+message+'\n')
 
 class alumniSwarm:
+    swarmLogger = SwarmLogger()
     def remove_stack(self,institute):
         command = ["docker","rm","-f",institute+"_web_1"]
         self.run_command(command)
