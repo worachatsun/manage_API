@@ -34,10 +34,11 @@ exports.saveAppInfo = (req, rep) => {
         pyshell.send(uni_abb).send(appMaker._id)
         
         pyshell.on('message', function (message) {
+            console.log(message, 'message')
             const web_api = message
             console.log(web_api, 'web_api')
-            AppMaker.findByIdAndUpdate(appMaker._id, {web_api: message}, {new: true}, (err, appMaker) => {
-                console.log(appMaker)
+            AppMaker.findByIdAndUpdate(appMaker._id, {web_api}, {new: true}, (err, appMaker) => {
+                console.log(appMaker.web_api)
             })
         })
     
