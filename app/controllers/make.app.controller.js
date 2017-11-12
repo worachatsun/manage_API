@@ -34,6 +34,8 @@ exports.saveAppInfo = (req, rep) => {
         pyshell.send(uni_abb).send(appMaker._id)
         
         pyshell.on('message', function (message) {
+            const web_api = message
+            console.log(web_api, 'web_api')
             AppMaker.findByIdAndUpdate(appMaker._id, {web_api: message}, {new: true}, (err, appMaker) => {
                 console.log(appMaker)
             })
@@ -101,7 +103,7 @@ exports.deleteApp = (req, rep) => {
     AppMaker.find({ _id: req.payload._id }, (err, apps) => {
         if(err) { return rep(Boom.notFound(err)) }
         var pyshell = new PythonShell('destroy_stack.py', { scriptPath: `${__dirname}/../../swarm-script/`} )
-        pyshell.send(apps[0].uni_abb)
+        pyshell.send(apps[0].uni_abb.toLowerCase())
         
         pyshell.on('message', function (message) {
             console.log(message)
