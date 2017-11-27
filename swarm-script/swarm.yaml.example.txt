@@ -31,7 +31,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == manager-01
+          - node.hostname == worker-02
       restart_policy:
         condition: on-failure
       replicas: 1
@@ -64,7 +64,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.hostname == worker-02
+          - node.hostname == worker-03
       restart_policy:
         condition: on-failure
     networks:
@@ -72,5 +72,5 @@ services:
         aliases: 
           - web
     environment:
-      - API_HOST=http://13.229.95.192:api-port/v1
-      - URL_API=http://13.229.95.192:api-port/
+      - API_HOST=http://52.221.229.492:api-port/v1
+      - URL_API=http://52.221.229.49:api-port/
