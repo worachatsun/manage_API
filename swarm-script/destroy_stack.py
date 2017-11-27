@@ -18,11 +18,7 @@ class SwarmLogger:
 class alumniSwarm:
     swarmLogger = SwarmLogger()
     def remove_stack(self,institute):
-        command = ["docker","rm","-f",institute+"_web_1"]
-        self.run_command(command)
-        command = ["docker","rm","-f",institute+"_db_1"]
-        self.run_command(command)
-        command = ["docker","rm","-f",institute+"_api_1"]
+        command = ["docker","stack","rm",institute]
         self.run_command(command)
         self.swarmLogger.logs(" - Removed "+institute+" stack.")
 

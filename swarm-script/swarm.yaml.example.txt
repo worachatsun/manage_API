@@ -1,0 +1,76 @@
+version: "3"
+
+networks:
+  institute:
+    driver: overlay
+
+services:
+
+  db: 
+    image: mongo:3.4
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == worker-01
+      restart_policy:
+        condition: on-failure
+    networks:
+      institute:
+        aliases: 
+          - db
+    volumes:
+      - /opt/alumni-data:/data
+    ports:
+      - "db-port:27017"
+
+  api:
+    image: boszerwp/alc-api:11
+    depends_on: 
+      - db
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == manager-01
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 200M
+        reservations:
+          cpus: '0.01'
+          memory: 100M
+    ports: 
+      - "api-port:3000"
+    networks:
+      institute:
+        aliases: 
+          - api
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=3000
+      - MONGO_HOST=mongodb://54.169.88.56:db-port/
+      - MONGO_TABLE=Alumni
+
+  web:
+    image: boszerwp/alc-cms:11
+    depends_on:
+      - api
+    ports:
+      - "web-port:8080"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == worker-02
+      restart_policy:
+        condition: on-failure
+    networks:
+      institute:
+        aliases: 
+          - web
+    environment:
+      - API_HOST=http://13.229.95.192:api-port/v1
+      - URL_API=http://13.229.95.192:api-port/

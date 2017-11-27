@@ -19,26 +19,10 @@ class alumniSwarm:
     swarmLogger = SwarmLogger()
     def deploy_stack(self,institute):
         ins = institute
-        command = ["docker-compose","-f","/var/www/manage_API/swarm-script/test.yaml","-p",institute,"up","-d"]
+        command = ["docker","stack","deploy","-c","/var/www/manage_API/swarm-script/"+institute+".yaml",institute]
         self.run_command(command)
         self.swarmLogger.logs(" - Deployed "+institute+" stack.")
-        self.replace_container(ins)
 
-    def remove_stack(self,institute):
-        command = ["docker","rm","-f",institute+"_web_1"]
-        self.run_command(command)
-        command = ["docker","rm","-f",institute+"_db_1"]
-        self.run_command(command)
-        command = ["docker","rm","-f",institute+"_api_1"]
-        self.run_command(command)
-        self.swarmLogger.logs(" - Removed "+institute+" stack.")
-
-    def cp_file_container(self,institute):
-        time.sleep(10)
-        command = ["docker","cp","/var/www/manage_API/swarm-script/.env",institute+"_web_1:/src/app/.env"]
-        self.run_command(command)
-        command = ["docker","restart",institute+"_web_1"]
-        self.run_command(command)
     
     def run_command(self, command):
         debugcommand = " - {0}".format(" ".join(command))
@@ -63,20 +47,19 @@ class alumniSwarm:
             writer.writerow({'id': ids,'name': institute,'api-port':api,'web-port':web,'db-port' : db})
             info.close()
         ec = self.env_change(ins,api,web,db)
-        print('13.229.93.168:'+str(web))
+        #print('13.229.93.168:'+str(web))
         #print(app_id)
         self.change_app_id(api,app_id)
-
 
 
     
 
     def env_change(self,institute,api,web,db):
         ins = institute
-        shutil.copy('/var/www/manage_API/swarm-script/test.yaml.example','/var/www/manage_API/swarm-script/test.yaml')
-        with open('/var/www/manage_API/swarm-script/test.yaml','r') as f:
+        shutil.copy('/var/www/manage_API/swarm-script/swarm.yaml.example','/var/www/manage_API/swarm-script/'+institute+'.yaml')
+        with open('/var/www/manage_API/swarm-script/'+institute+'.yaml','r') as f:
             s = f.read()
-        with open('/var/www/manage_API/swarm-script/test.yaml', 'w') as f:
+        with open('/var/www/manage_API/swarm-script/'+institute+'.yaml', 'w') as f:
             s = s.replace('db-port', str(db))
             s = s.replace('web-port',str(web))
             s = s.replace('api-port',str(api))
@@ -97,28 +80,6 @@ class alumniSwarm:
                     break
         self.insert_deployed_stack_info(ins,res,app_id)
                     
-    def replace_container(self,institute):
-        shutil.copy('/var/www/manage_API/swarm-script/.env.example','/var/www/manage_API/swarm-script/.env')
-        ins = institute
-        api = 0
-        te = "bravo"
-        with open('/var/www/manage_API/swarm-script/info.csv','r') as info:
-            reader = csv.reader(info)
-            for row in reader:
-                res = ','.join(row)
-                if(res != ''):
-                    res = res.split(',') 
-                    te = res[1]  
-                    if(te == ins):
-                        api = res[2] 
-        with open('/var/www/manage_API/swarm-script/.env','r') as env:
-            s = env.read()
-        with open('/var/www/manage_API/swarm-script/.env','w') as env:
-            r = s.replace('api',str(api))
-            #print(r)
-            env.write(r)
-        self.cp_file_container(institute)
-        #self.replace_container(ins)
                     
     def change_app_id(self,app_api,app_id):
         print(app_id)
